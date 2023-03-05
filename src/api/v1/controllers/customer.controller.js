@@ -36,7 +36,7 @@ class Customer {
     const password = passwordToHash(body.password);
     try {
       let marData = { ...body, password };
-      const createdMarchant = await CustomerService.CreateMarchant(marData);
+      const createdMarchant = await CustomerService.CreateCustomer(marData);
 
 
       let Marchant;

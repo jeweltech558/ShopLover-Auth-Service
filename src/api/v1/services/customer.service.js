@@ -10,7 +10,7 @@ class customerService extends customerRepository {
   constructor() {
     super(customerSchema);
   }
-  async CreateMarchant(customer) {
+  async CreateCustomer(customer) {
     const prevMarchant = await Promise.all([
       this.getByEmail(
         customer.email === undefined || customer.email === null
@@ -29,10 +29,10 @@ class customerService extends customerRepository {
     } else if (prevMarchant[1]) {
       return Promise.reject({ message: "Phone already taken!" });
     } else {
-      const createdCustomer = await this.createMarchant(customer);
+      const createdCustomer = await this.CreateCustomer(customer);
 
       // if (createdCustomer) {
-      //   await this.createMarchantInfo(createdCustomer);
+      //   await this.CreateCustomerInfo(createdCustomer);
       // }
       return Promise.resolve(createdCustomer);
     }

@@ -8,7 +8,7 @@ class CustomerRepository extends DbRepository {
   constructor() {
     super(customerSchema);
   }
-  createMarchant = async (marchant) => {
+  CreateCustomer = async (marchant) => {
     const autoId = await counter(
       customerSchema.modelName,
       process.env.MARCHANT_CODE_PREFIX
@@ -173,7 +173,7 @@ class CustomerRepository extends DbRepository {
     });
   }
 
-  // createMarchantInfo = async (marchantInfo) => {
+  // CreateCustomerInfo = async (marchantInfo) => {
   //   const autoId = await counter(marchantInfoSchema.modelName);
   //   const id = autoId.sequence;
   //   return new Promise((resolve, reject) => {
