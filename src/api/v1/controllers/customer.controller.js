@@ -36,27 +36,26 @@ class Customer {
     const password = passwordToHash(body.password);
     try {
       let marData = { ...body, password };
-      const createdMarchant = await CustomerService.CreateCustomer(marData);
+      const createdCustomer = await CustomerService.createCustomer(marData);
 
-
-      let Marchant;
-      if (!createdMarchant) {
+      let customer;
+      if (!createdCustomer) {
         return next(
-          new ApiError("Marchant Create Failed !", httpStatus.BAD_REQUEST)
+          new ApiError("Customer Create Failed !", httpStatus.BAD_REQUEST)
         );
       } else {
-        Marchant = createdMarchant.toObject();
-        const confirmToken = generateEmailConfirmToken(Marchant);
+        customer = createdCustomer.toObject();
+        const confirmToken = generateEmailConfirmToken(customer);
 
         const templateData = {
-          name: Marchant.firstName,
+          name: customer.firstName,
           confirmLink:
             process.env.FRONTEND_BASE_URL +
-            `/marchant/email-confirmation?confirmToken=${confirmToken}`,
+            `/customer/email-confirmation?confirmToken=${confirmToken}`,
         };
         // ! eventEmitter
         eventEmitter.emit("send_email", {
-          to: Marchant.email,
+          to: customer.email,
           subject: "ShopLover-Email Confirmation",
           templateName: "emailConfirmation",
           templateData: templateData,
@@ -64,7 +63,7 @@ class Customer {
         });
         res.status(httpStatus.CREATED).send({
           status: "OK",
-          data: { ...Marchant, confirmToken: confirmToken },
+          data: { ...customer, confirmToken: confirmToken },
         });
       }
     } catch (error) {
@@ -92,29 +91,29 @@ class Customer {
     const password = passwordToHash(body.password).toString();
 
     try {
-      const Marchant = await CustomerService.GetMarchantByMailAndPassword({
+      const Customer = await CustomerService.GetCustomerByMailAndPassword({
         email: body.email,
         password: password,
       });
       let refreshToken;
-      if (!Marchant) {
+      if (!Customer) {
         return next(
-          new ApiError("Invalid Marchant Credentials!!", httpStatus.NOT_FOUND)
+          new ApiError("Invalid Customer Credentials!!", httpStatus.NOT_FOUND)
         );
       } else {
         // accessToken, refreshToken
-        refreshToken = generateRefreshToken(Marchant);
+        refreshToken = generateRefreshToken(Customer);
         const result = {
-          ...Marchant.toObject(),
+          ...Customer.toObject(),
           tokens: {
-            accessToken: generateAccessToken(Marchant),
+            accessToken: generateAccessToken(Customer),
             refreshToken: refreshToken,
           },
         };
         delete result.password;
         delete result.refreshTokens;
-        await CustomerService.UpdateMarchantProfile({
-          id: Marchant.id,
+        await CustomerService.UpdateCustomerProfile({
+          id: Customer.id,
           refreshToken: refreshToken,
         });
         return res.status(httpStatus.OK).send({
@@ -129,19 +128,17 @@ class Customer {
     }
   }
 
-  
-
   async changePasswordController(req, res, next) {
     const { body, user } = req;
     const prevPassword = passwordToHash(body.prevPassword).toString();
     const password = passwordToHash(body.password).toString();
     try {
-      const marchant = await CustomerService.GetMarchantByIdAndPassword({
+      const customer = await CustomerService.GetCustomerByIdAndPassword({
         id: user.id,
         password: prevPassword,
       });
 
-      if (!marchant) {
+      if (!customer) {
         return next(new ApiError("Wrong Password!", httpStatus.BADREQUEST));
       }
       const User = await CustomerService.update(
@@ -201,7 +198,7 @@ class Customer {
       if (!User) {
         return next(
           new ApiError(
-            "Reset  Password Failed, No Marchant Found!",
+            "Reset  Password Failed, No Customer Found!",
             httpStatus.NOT_FOUND
           )
         );
@@ -248,7 +245,7 @@ class Customer {
       if (!User) {
         return next(
           new ApiError(
-            "Email Confirmation Failed, No Marchant Found!",
+            "Email Confirmation Failed, No Customer Found!",
             httpStatus.UNAUTHORIZED
           )
         );
@@ -269,22 +266,22 @@ class Customer {
     const { body } = req;
 
     try {
-      const marchant = await CustomerService.getByEmail(body.email);
+      const customer = await CustomerService.getByEmail(body.email);
 
-      if (!marchant) {
-        return next(new ApiError("Marchant not found", httpStatus.NOT_FOUND));
+      if (!customer) {
+        return next(new ApiError("Customer not found", httpStatus.NOT_FOUND));
       } else {
-        const resetToken = generatePasswordResetToken(marchant);
+        const resetToken = generatePasswordResetToken(customer);
 
         const templateData = {
-          name: marchant.firstName,
+          name: customer.firstName,
           resetLink:
             process.env.FRONTEND_BASE_URL +
-            `/marchant/resetPassword?resetToken=${resetToken}`,
+            `/customer/resetPassword?resetToken=${resetToken}`,
         };
         // ! eventEmitter
         eventEmitter.emit("send_email", {
-          to: marchant.email,
+          to: customer.email,
           subject: "ShopLover-Password Recovery",
           templateName: "resetPassword",
           templateData: templateData,
@@ -292,7 +289,7 @@ class Customer {
         });
         return res.status(httpStatus.OK).send({
           status: "OK",
-          data: { marchant, resetToken: resetToken }, //// resetToken Must be removed from this res.send,use for Postman Test purpose
+          data: { customer, resetToken: resetToken }, //// resetToken Must be removed from this res.send,use for Postman Test purpose
         });
       }
     } catch (error) {
@@ -302,15 +299,13 @@ class Customer {
     }
   }
 
-  
-
   async refreshToken(req, res, next) {
     const { body } = req;
     const refreshToken = body.refreshToken;
     try {
       let doc;
 
-      doc = await CustomerService.GetMarchant({ refeshTokens: refreshToken });
+      doc = await CustomerService.GetCustomer({ refeshTokens: refreshToken });
 
       if (!doc) {
         return res.status(httpStatus.BAD_REQUEST).send({
@@ -324,7 +319,7 @@ class Customer {
         process.env.REFRESH_TOKEN,
         (err, decoded) => {
           if (err) {
-            CustomerService.RemoveMarchantRefreshToken({
+            CustomerService.RemoveCustomerRefreshToken({
               refreshToken,
               id: doc._id,
             });
@@ -366,14 +361,14 @@ class Customer {
     const isLogOutFromAllDevice = body?.logoutFromAllDevice;
     try {
       let doc;
-      doc = await CustomerService.GetMarchant({ refeshTokens: refreshToken });
+      doc = await CustomerService.GetCustomer({ refeshTokens: refreshToken });
       if (refreshToken && isLogOutFromAllDevice) {
-        doc = await CustomerService.RemoveMarchantRefreshToken({
+        doc = await CustomerService.RemoveCustomerRefreshToken({
           refreshToken: null,
           id: doc_id,
         });
       } else if (refreshToken) {
-        doc = await CustomerService.RemoveMarchantRefreshToken({
+        doc = await CustomerService.RemoveCustomerRefreshToken({
           refreshToken,
           id: doc._id,
         });

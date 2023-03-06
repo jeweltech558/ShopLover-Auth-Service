@@ -8,18 +8,17 @@ class CustomerRepository extends DbRepository {
   constructor() {
     super(customerSchema);
   }
-  CreateCustomer = async (marchant) => {
+  CreateCustomer = async (customer) => {
     const autoId = await counter(
       customerSchema.modelName,
       process.env.MARCHANT_CODE_PREFIX
     );
     const id = autoId.sequence;
-    // const code = autoId?.prefix + id;
 
     return new Promise((resolve, reject) => {
       customerSchema
-        .create({ ...marchant, id })
-        .then((marchant) => resolve(marchant))
+        .create({ ...customer, id })
+        .then((customer) => resolve(customer))
         .catch((error) => {
           console.log(error);
           reject(error);
@@ -31,7 +30,7 @@ class CustomerRepository extends DbRepository {
     return new Promise((resolve, reject) => {
       customerSchema
         .find({ email: email })
-        .then((marchant) => resolve(marchant[0]))
+        .then((customer) => resolve(customer[0]))
         .catch((error) => {
           console.log(error);
           reject(error);
@@ -42,7 +41,7 @@ class CustomerRepository extends DbRepository {
     return new Promise((resolve, reject) => {
       customerSchema
         .find({ phone: phone })
-        .then((marchant) => resolve(marchant[0]))
+        .then((customer) => resolve(customer[0]))
         .catch((error) => {
           console.log(error);
           reject(error);
@@ -68,7 +67,7 @@ class CustomerRepository extends DbRepository {
         .findOne({
           $and: [{ email: data.email }, { password: data.password }],
         })
-        .then((marchant) => resolve(marchant))
+        .then((customer) => resolve(customer))
         .catch((error) => {
           console.log(error);
           reject(error);
@@ -80,7 +79,7 @@ class CustomerRepository extends DbRepository {
     return new Promise((resolve, reject) => {
       customerSchema
         .findById(id)
-        .then((marchant) => resolve(marchant))
+        .then((customer) => resolve(customer))
         .catch((error) => {
           console.log(error);
           reject(error);
@@ -93,7 +92,7 @@ class CustomerRepository extends DbRepository {
         .findOne({
           $and: [{ _id: data.id }, { password: data.password }],
         })
-        .then((marchant) => resolve(marchant))
+        .then((customer) => resolve(customer))
         .catch((error) => {
           console.log(error);
           reject(error);
@@ -109,7 +108,7 @@ class CustomerRepository extends DbRepository {
           { profileImage: data.profileImage },
           { new: true }
         )
-        .then((marchant) => resolve(marchant))
+        .then((customer) => resolve(customer))
         .catch((error) => {
           console.log(error);
           reject(error);
@@ -117,7 +116,7 @@ class CustomerRepository extends DbRepository {
     });
   }
 
-  updateMarchant(where, data) {
+  updateCustomer(where, data) {
     let update = {
       $set: {
         firstName: data.firstName,
@@ -128,17 +127,16 @@ class CustomerRepository extends DbRepository {
         isPhoneVerified: data.isPhoneVerified,
         passwordResetAt: data.passwordResetAt,
         statusId: data.statusId,
-        shopName: data.shopName,
       },
       $push: {
         refreshTokens: data.refreshToken,
-        marchantInfo: data?.marchantInfo?._id,
+        // marchantInfo: data?.marchantInfo?._id,
       },
     };
     return new Promise((resolve, reject) => {
       customerSchema
         .findOneAndUpdate(where, update)
-        .then((marchant) => resolve(marchant))
+        .then((customer) => resolve(customer))
         .catch((error) => {
           console.log(error);
           reject(error);
@@ -146,7 +144,7 @@ class CustomerRepository extends DbRepository {
     });
   }
 
-  removeMarchantRefreshToken(where, data) {
+  removeCustomerRefreshToken(where, data) {
     let update;
 
     if (!where.refreshToken) {
