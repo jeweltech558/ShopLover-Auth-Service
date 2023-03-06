@@ -612,33 +612,39 @@ class Customer {
   //     );
   //   }
   // }
-  // async updateMarchantGeneralInfoController(req, res, next) {
-  //   const { body, user } = req;
 
-  //   try {
-  //     const MarchantInfo = await CustomerService.UpdateMarchantGeneralInfo({
-  //       ...body,
-  //       user_id: user.id,
-  //     });
+  async updateCustomerGeneralInfoController(req, res, next) {
+    const { body, user } = req;
 
-  //     if (!MarchantInfo) {
-  //       return next(
-  //         new ApiError(
-  //           "Marchant Address Info Update Failed !",
-  //           httpStatus.BAD_REQUEST
-  //         )
-  //       );
-  //     } else {
-  //       res.status(httpStatus.CREATED).send({
-  //         status: "OK",
-  //         data: { ...MarchantInfo.toObject() },
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     next(error);
-  //   }
-  // }
+    console.log('===========');
+    console.log(body);
+    console.log(user);
+    console.log('===========');
+
+    try {
+      const customerInfo = await CustomerService.UpdateCustomerGeneralInfoController({
+        ...body,
+        user_id: user.id,
+      });
+
+      if (!customerInfo) {
+        return next(
+          new ApiError(
+            "Customer Address Info Update Failed !",
+            httpStatus.BAD_REQUEST
+          )
+        );
+      } else {
+        res.status(httpStatus.CREATED).send({
+          status: "OK",
+          data: { ...customerInfo.toObject() },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
 
   // async getMarchantBankInfoController(req, res, next) {
   //   const { body, params } = req;

@@ -88,12 +88,15 @@ class Customer {
     addressInfo: Joi.any(),
   });
 
-  marchantAddressInfoValidation = Joi.object().keys({
+  customerAddressInfoValidation = Joi.object().keys({
+    type: Joi.string().required(),
     country: Joi.string().required(),
     division: Joi.string().required(),
-    city: Joi.string().allow(""),
-    zip: Joi.string().allow(""),
+    district: Joi.string().required(),
+    subDistrict: Joi.string().allow(""),
+    area: Joi.string().allow(""),
     address: Joi.string().allow(""),
+    isDefault: Joi.boolean().required(),
   });
 
   marchantBankInfoValidation = Joi.object({

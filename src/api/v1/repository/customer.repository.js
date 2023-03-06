@@ -218,13 +218,30 @@ class CustomerRepository extends DbRepository {
   //   });
   // }
 
-  updateMarchantGeneralInfo(where, data) {
+  updateCustomerGeneralInfoRepository(where, data) {
+    // let update = {
+    //   $set: {
+    //     firstName: data.firstName,
+    //     lastName: data.lastName,
+    //     phone: data.phone,
+    //     shopName: data.shopName,
+    //   },
+    // };
     let update = {
       $set: {
         firstName: data.firstName,
         lastName: data.lastName,
         phone: data.phone,
-        shopName: data.shopName,
+        addressInfo: {
+          type: data.addressInfo?.type,
+          country: data.addressInfo?.country,
+          division: data.addressInfo?.division,
+          district: data.addressInfo?.district,
+          subDistrict: data.addressInfo?.subDistrict,
+          area: data.addressInfo?.area,
+          address: data.addressInfo?.address,
+          isDefault: data.addressInfo?.isDefault,
+        },
       },
     };
     return new Promise((resolve, reject) => {
@@ -233,7 +250,7 @@ class CustomerRepository extends DbRepository {
           new: true,
         })
         .select("-password -refreshTokens")
-        .then((marchantInfo) => resolve(marchantInfo))
+        .then((customerInfo) => resolve(customerInfo))
         .catch((error) => {
           reject(error);
         });

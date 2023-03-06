@@ -141,22 +141,22 @@ class customerService extends customerRepository {
   //   }
   // }
 
-  // async UpdateMarchantGeneralInfo(marchantInfo) {
-  //   console.log("Marcahnt Info::>>> ", marchantInfo);
-  //   try {
-  //     const updatedMarchantInfo = this.updateMarchantGeneralInfo(
-  //       { _id: marchantInfo.user_id },
-  //       marchantInfo
-  //     );
-  //     if (!updatedMarchantInfo) {
-  //       return new ApiError("Marchant Info Update Failed!");
-  //     }
-  //     return updatedMarchantInfo;
-  //   } catch (error) {
-  //     console.log("marchant get Error: ", error);
-  //     throw new Error(error.message);
-  //   }
-  // }
+  async UpdateCustomerGeneralInfoController(customerInfo) {
+    console.log("Customer Info::>>> ", customerInfo);
+    try {
+      const updatedCustomerInfo = this.updateCustomerGeneralInfoRepository(
+        { _id: customerInfo.user_id },
+        customerInfo
+      );
+      if (!updatedCustomerInfo) {
+        return new ApiError("Customer Info Update Failed!");
+      }
+      return updatedCustomerInfo;
+    } catch (error) {
+      console.log("Customer get Error: ", error);
+      throw new Error(error.message);
+    }
+  }
   // async GetMarchantInfo(where) {
   //   try {
   //     const marchant = this.getMarchantInfo(where);

@@ -53,92 +53,14 @@ router.post(
   CustomerController.refreshToken
 );
 
-// router.get("/profile", auth, CustomerController.profileController);
 // router.put(
 //   "/info/general",
 //   auth,
-//   validate(CustomerValidation.UpdateMarchantGeneralValidation),
-
-//   CustomerController.updateMarchantGeneralController
+//   validate(CustomerValidation.customerAddressInfoValidation),
+//   CustomerController.updateCustomerGeneralInfoController
 // );
 
 
-
-
-
-
-// router.post(
-//   "/update-profile-image",
-//   auth,
-//   singleImageUpload.single("profile_image"),
-//   CustomerController.updateProfileImage
-// );
-
-
-
-// router.get(
-//   "/info/:marchant_Id",
-//   auth,
-//   idChecker("marchant_Id"),
-//   CustomerController.getMarchantInfoController
-// );
-
-// router.put(
-//   "/info/business",
-//   auth,
-//   singleImageUpload.single("national_id_image"),
-//   validate(CustomerValidation.marchantBusinessInfoValidation),
-//   CustomerController.updateMarchantBusinessInfoController
-// );
-
-// router.get(
-//   "/info/business/:marchant_Id",
-//   auth,
-//   idChecker("marchant_Id"),
-//   CustomerController.getMarchantBusinessInfoController
-// );
-
-// router.put(
-//   "/info/general",
-//   auth,
-//   validate(CustomerValidation.marchantAddressInfoValidation),
-//   CustomerController.updateMarchantGeneralInfoController
-// );
-
-// router.get(
-//   "/info/general/:marchant_Id",
-//   auth,
-//   idChecker("marchant_Id"),
-//   CustomerController.getMarchantGeneralInfoController
-// );
-
-// router.put(
-//   "/info/bank",
-//   auth,
-//   validate(CustomerValidation.marchantBankInfoValidation),
-//   CustomerController.updateMarchantBankInfoController
-// );
-
-// router.get(
-//   "/info/bank/:marchant_Id",
-//   auth,
-//   idChecker("marchant_Id"),
-//   CustomerController.getMarchantBankInfoController
-// );
-
-// router.put(
-//   "/info/return_address",
-//   auth,
-//   validate(CustomerValidation.marchantRtnAddressInfoValidation),
-//   CustomerController.updateMarchantRtnAddressInfoController
-// );
-
-// router.get(
-//   "/info/return_address/:marchant_Id",
-//   auth,
-//   idChecker("marchant_Id"),
-//   CustomerController.getMarchantRtnAddressInfoController
-// );
 
 router.post("/logout", CustomerController.logout);
 
